@@ -43,8 +43,11 @@ Rules:
 - Return ONLY the JSON object"""
 
         try:
-            response = self.model.generate_content(prompt)
-            result = self._clean_json_output(response.text)
+            response = self.model.generate_content(
+                prompt,
+                generation_config={"response_mime_type": "application/json"}
+            )
+            result = json.loads(response.text)
             return result
         except Exception as e:
             return {

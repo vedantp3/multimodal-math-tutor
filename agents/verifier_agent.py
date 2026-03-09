@@ -62,8 +62,11 @@ Return a JSON object with exactly these fields:
 Be thorough but fair. Return ONLY the JSON object."""
 
         try:
-            response = self.model.generate_content(prompt)
-            result = self._clean_json_output(response.text)
+            response = self.model.generate_content(
+                prompt,
+                generation_config={"response_mime_type": "application/json"}
+            )
+            result = json.loads(response.text)
             
             # Add HITL flag based on confidence
             confidence = result.get("confidence", 50)
