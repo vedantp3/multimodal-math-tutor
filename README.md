@@ -1,6 +1,6 @@
 # 🧮 Multimodal Math Mentor
 
-> AI-powered JEE math tutor that accepts text, image, and audio inputs — built with RAG, multi-agent orchestration, HITL, and self-learning memory.
+>JEE math tutor that accepts text, image, and audio inputs — built with RAG, multi-agent orchestration, HITL, and self-learning memory.
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://math-mentor.streamlit.app)
 
