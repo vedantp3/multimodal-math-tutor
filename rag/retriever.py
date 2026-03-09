@@ -33,8 +33,9 @@ class RAGRetriever:
                 self.documents = json.load(f)
             print(f"Loaded existing FAISS index with {len(self.documents)} documents.")
         else:
-            # Build new index
-            self._build_index()
+            # DO NOT build here synchronously, it causes a 60-second timeout on Streamlit Cloud
+            print("No FAISS index found. It will be built lazily on first retrieval.")
+            self.index = None
     
     def _build_index(self):
         """Build FAISS index from knowledge base documents."""
@@ -125,11 +126,16 @@ class RAGRetriever:
             k = TOP_K_RETRIEVAL
             
         if self.index is None or len(self.documents) == 0:
-            return [{
-                "content": "No relevant context found. Knowledge base is empty or not initialized.",
-                "metadata": {"source": "system"},
-                "score": 0.0
-            }]
+            print("FAISS index not loaded. Attempting to build or load now...")
+            self._build_index()
+            
+            # If it's still None after trying to build, then knowledge base is empty
+            if self.index is None:
+                return [{
+                    "content": "No relevant context found. Knowledge base is empty or could not be generated.",
+                    "metadata": {"source": "system"},
+                    "score": 0.0
+                }]
         
         query_embedding = self._get_query_embedding(query)
         if query_embedding is None:
